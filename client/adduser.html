@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Adduser</title>
+  </head>
+  <body>
+    
+    <div class="shadow-lg p-3 mb-5 login   w-25 position-absolute top-50 start-50 translate-middle bord">
+      <form onsubmit= "addEmployee(event)" class="d-flex justify-content-center align-items-center flex-column">
+        <h1 class="fw-bold text-center pt-4">ADD USER</h1>
+          <div class="pt-2">
+            <i class="fa fa-user-circle px-2 text-center pt-1 " style="font-size:30px"></i><input type="text" class="rounded p-2" placeholder="Username" name="username" id="name">
+              <div id="nameerr"></div>
+          </div>
+          <div class=" pt-4">
+           <div  class=""><i class="fa fa-envelope px-2  pt-1 text-center" style="font-size:30px"></i><input type="email" class="rounded p-2" name="email" placeholder="Email" id="email"></div>
+              <div id="emailerr"></div>
+          </div>
+
+          <div class=" pt-4">
+            <div  class=""><i class="fa fa-phone px-2  pt-1 text-center" style="font-size:30px"></i><input type="number" class="rounded p-2" name="phoneno" placeholder="Phone no" id="phoneno"></div>
+               <div id="emailerr"></div>
+          </div>
+
+          <div class=" pt-4">
+            <div  class=""><i class="fa fa-lock px-2  pt-1 text-center" style="font-size:30px"></i><input type="password" class="rounded p-2" name="password" placeholder="Password" id="password"></div>
+               <div id="emailerr"></div>
+          </div>
+
+          <div>
+            <label for="usertype">User Type:</label><br>
+            <select id="usertype" name="usertype" required>
+                <option value="Admin">Admin</option>
+                <option value="employee">Employee</option>
+            </select><br><br>
+
+          </div>
+      
+        <div class="pt-4 pb-4">
+          <input type="submit"  class="custom-btn btn-2" value="SUBMIT">
+        </div>
+     
+      </form>
+    </div>
+
+   
+
+
+    <script src="./script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    
+   
+  </body>
+</html>

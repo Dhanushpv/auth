@@ -1,0 +1,20 @@
+*{
+    padding: 0px;
+    margin: 0px;
+
+}
+
+.body{
+    background-image: linear-gradient(to bottom right, #6151BF, rgb(255, 0, 251));
+    background-repeat: no-repeat;
+    height: 30vh;
+}
+.icon{
+    padding-top: 130px;
+}
+.search{
+    width: 100vh;
+}
+.line{
+    border: 1px solid gray;
+}
