@@ -121,24 +121,29 @@ exports.update = async function (req,res){
         let body = req.body;
         console.log("body",body);
 
+
+
         let data= {
             name : body.name,
             email : body.email,
             phoneno : body.phoneno,
-            password : body.password
+            password : body.password,
+            usertype : body.user_type
         }
 
         
     updateId = req.params.id 
     console.log("updateId",updateId);
 
-    updateData = await users.updateOne({_id : updateId},data);
-    console.log("updateData",updateData);
+    update_employee = await users.updateOne({_id : updateId},data);
+    console.log("updateemployee",updateemployee);
 
     let response = success_function({
         success: true,
-        statuscode: 200,
-        message: "successfully Updated.."
+        statuscode:200,
+        data:update_employee,
+        message: "successfully Updated..",
+        
     })
     res.status(response.statuscode).send(response)
     return;

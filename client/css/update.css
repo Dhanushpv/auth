@@ -57,10 +57,37 @@ body{
     border-radius: 20px;
   }
   .usertypes{
-    width: 200px;
+    width: 400px;
+    background-color: rgba(0, 0, 0, 0);
+    color: antiquewhite;
+    border: 2px solid rgba(255, 255, 255, 0);
+    border-bottom: 2px solid white;
     
    
+  } 
+  .types{
+    padding: 0px 0px 0px 40px ;
+  }
+  .types1{
+    padding: 0px 0px 0px 47px ;
+  }
+  .types2{
+    padding: 0px 0px 0px 20px ;
+  }
+  .types3{
+    padding: 0px 0px 0px 20px ;
   }
   .usertypes-main{
-    margin-left: 38px;
+    padding: 0px 0px 0px 88px ;
   }
+
+.label{
+    display: flex;
+    justify-content: left;
+    align-items: start;
+}
+.login{
+    margin: 0px 10px 10px 10px;
+    width: 765px;
+    height: 700px;
+}

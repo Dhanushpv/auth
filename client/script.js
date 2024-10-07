@@ -216,7 +216,8 @@ async function loadUserDatas() {
         let response = await fetch(`/users/${id}`,{
             method : 'GET',
             headers : {
-                'Authorization' : `Bearer ${token}`
+                'Authorization' : `Bearer ${token}`,
+                "Content-Type" : "Application/json",
             }
    
         })
@@ -229,6 +230,9 @@ async function loadUserDatas() {
 
         let data = parsed_Response.data;
         console.log("data",data)
+
+      
+        
 
 
 
@@ -295,20 +299,147 @@ function updateData(id){
     window.location =`update.html?login=${token_key}&id=${id}`
 
 }
-async function updateData(){
+
+async function updateLoadDatas() {
+    let params = new URLSearchParams(window.location.search);
+
+    let id = params.get('id');
+
+    let  token_key = params.get('login');
+
+    let token = localStorage.getItem(token_key)
+
+
+    try {
+        let response = await fetch(`/users/${id}`,{
+            method : 'GET',
+             headers : {
+                'Authorization' : `Bearer ${token}`,
+                "Content-Type" : "Application/json",
+            }
+        });
+        console.log("response : ",response);
+
+        let parsed_Response = await response.json();
+        console.log("parsed_Response : ",parsed_Response);
+        
+        let data = parsed_Response.data;
+        console.log("data",data)
+
+        let name = document.getElementById('name');
+        name.value = data.name;
+
+        
+        let email = document.getElementById('email');
+        email.value = data.email;
+
+        let phoneno = document.getElementById('phoneno');
+        phoneno.value = data.phoneno;
+
+        let password = document.getElementById('password');
+        password.value = data.password;
+
+        // let usertype = document.getElementById('usertype');
+        // usertype.value = data.usertype;
+        
+    } catch (error) {
+        console.log("error : ",error)
+    }
+
     
 }
 
+async function editData(event){
+    event.preventDefault()
+    
+    let params = new URLSearchParams(window.location.search);
+    console.log('params',params);
+
+    let token_key = params.get('login');
+    console.log("token_key",token_key);
+
+    let token = localStorage.getItem(token_key);
+
+    let name = document.getElementById('name').value;
+    let email = document.getElementById('email').value;
+    let phoneno = document.getElementById('phoneno').value;
+    let password = document.getElementById('password').value;
+    let usertype = document.getElementById('usertype').value;
+
+    let data = {
+        name,
+        email,
+        phoneno,
+        password,
+        usertype
+    }
+
+    let strdata = JSON.stringify(data);
+
+    try {
+        
+        let response = await fetch(`/singleUpdate/${id}`,{
+            method : 'PUT',
+            headers : {
+                "Content-Type" : "Application/json",
+                'Authorization' : `Bearer ${token}`
+            },
+            body : strdata,
+        });
+        console.log("responce :",response);
+
+        let parsed_response = await response.json();
+        console.log('parsed_response', parsed_response);
+
+
+
+    } catch (error) {
+        console.log("error",error);
+    }
+
+}
+
+
+
+
+
+
+
+
 async function deleteData(id) {
+
+    let params = new URLSearchParams(window.location.search)
+
+    let token_key = params.get('login');
+
+
+
+    let token = localStorage.getItem(token_key);
+
 
     console.log("reached......")
 
    
 
-    let response = await fetch(`/userDelete/${id}`,{
-        method : 'DELETE'
-    })
-    console.log("response :",response)
+    try {
+        let response = await fetch(`/userDelete/${id}`,{
+            method : 'DELETE',
+            headers : {
+                'Authorization' : `Bearer ${token}`
+            }
+        });
+        console.log("response :",response)
+
+        if(response.status===200){
+            alert("Employee successfully deleted ");
+            window.location=`admin.html?login=${token_key}`
+
+        }else{
+            alert("Something went wrong ");
+        }
+    } catch (error) {
+        console.log("error",error);
+    }
 
     
 }
