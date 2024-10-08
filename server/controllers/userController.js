@@ -135,8 +135,8 @@ exports.update = async function (req,res){
     updateId = req.params.id 
     console.log("updateId",updateId);
 
-    update_employee = await users.updateOne({_id : updateId},data);
-    console.log("updateemployee",updateemployee);
+    let update_employee = await users.updateOne({_id : updateId},data);
+    console.log("updateemployee",update_employee);
 
     let response = success_function({
         success: true,
@@ -147,6 +147,8 @@ exports.update = async function (req,res){
     })
     res.status(response.statuscode).send(response)
     return;
+
+    
 
     } catch (error) {
 

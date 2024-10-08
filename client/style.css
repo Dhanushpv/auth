@@ -5,9 +5,6 @@
 body{
     background-color: rgb(57, 44, 122);
 }
-.login{
-    background-color: rgb(166, 151, 240);
-};
 
 
 
@@ -53,8 +50,9 @@ body{
   }
   
   .bord{
-    border: 10px double rgb(20, 3, 57);
-    border-radius: 20px;
+  padding: 30px;
+  width: 400px;
+  height: 700px;
   }
   .usertypes{
     width: 200px;
@@ -64,3 +62,15 @@ body{
   .usertypes-main{
     margin-left: 38px;
   }
+.input_box{
+  border-radius: 20px;
+  width: 300px;
+  background-color: #ffffff00;
+  border: 1px solid whitesmoke;
+  color: #fff;
+  font-weight: bold;
+}
+::placeholder {
+  color: rgb(255, 255, 255);
+  opacity: 1; /* Firefox */
+}

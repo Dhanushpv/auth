@@ -1,4 +1,3 @@
-
 async function login(event){
     event.preventDefault();
 
@@ -162,7 +161,6 @@ async function veiwUsers(){
                     <td class="hov">${data[i]._id}</td>
                     <td class="hov">${data[i].name}</td>
                     <td class="hov">${data[i].email}</td>
-                    <td class="hov">${data[i].phoneno}</td>
                     <td class="hov">${data[i].phoneno}</td>
                     <td><button class="custom-btn btn-16" onclick="singleData('${data[i]._id}')" >view</button></td>
                     <td><i class="fa fa-pencil-square-o"  onclick="updateData('${data[i]._id}')" style="font-size:30px" ></i></td>
@@ -355,6 +353,8 @@ async function editData(event){
     let params = new URLSearchParams(window.location.search);
     console.log('params',params);
 
+    let id = params.get('id');
+
     let token_key = params.get('login');
     console.log("token_key",token_key);
 
@@ -392,19 +392,20 @@ async function editData(event){
         console.log('parsed_response', parsed_response);
 
 
+        if(response.status===200){
+            alert('Employee successfully Updated..');
+            window.location=`admin.html?login=${token_key}`
+        }else{
+            alert('Updation Failed')
+        }
+
+
 
     } catch (error) {
         console.log("error",error);
     }
 
 }
-
-
-
-
-
-
-
 
 async function deleteData(id) {
 
