@@ -2,6 +2,17 @@
   margin: 0px;
   padding: 0px;
 }
+nav{
+  background-color: rgb(57,44,122);
+}
+.bttn2{
+  width: 100px;
+  background-color: rgb(71, 153, 235);
+  border: 1px solid rgb(71, 153, 235);
+  font-weight: bolder;
+  color: #c0eafa;
+  border-radius: 15px;
+}
 table {
     width: 100%;
     border-collapse: collapse;

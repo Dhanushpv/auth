@@ -4,6 +4,7 @@ const { success_function, error_function } = require('../util/userResponse')
 const bcrypt =require('bcryptjs')
 const sendemail = require('../util/send-email').sendEmail
 const resetpassword = require('../util/Email_template/setpassword').resetPassword
+const fileUpload = require('../util/uploads').fileUpload;
     
 exports.create1 = async function (req, res) {
 
@@ -15,6 +16,9 @@ exports.create1 = async function (req, res) {
         let emails = body.email
         let name = body.name
 
+        let image = req.body.image;
+            console.log("image : ", image);
+
 
         let user_type = await usertype.findOne({user_type : body.user_type});
         console.log("user type" , user_type);
@@ -25,6 +29,11 @@ exports.create1 = async function (req, res) {
 
         body.user_type=id
 
+        if (image) {
+            let image_path = await fileUpload(image, "users");
+            console.log("image_path", image_path);
+            body.image = image_path;
+                    }
 
 
         function generateRandomPassword(length) {
@@ -41,7 +50,7 @@ exports.create1 = async function (req, res) {
           }
   
           var randomPassword = generateRandomPassword(12);
-          //console.log(randomPassword);
+          console.log(randomPassword);
 
           let content = await resetpassword(name,emails,randomPassword)
 
@@ -57,7 +66,8 @@ exports.create1 = async function (req, res) {
             email : body.email,
             phoneno : body.phoneno,
             password :password,
-            user_type : body.user_type
+            user_type : body.user_type,
+            image : body.image
 
           }
 
@@ -224,6 +234,65 @@ exports.delete = async function (req,res){
     res.status(response.statuscode).send(response)
     return;
 }
+}
+
+
+exports.resetPassword =async function(req,res){
+    try {
+        
+        _id =req.params.id;
+        console.log(_id)
+
+        let user = await users.findOne({_id : _id});
+        console.log("user",user)
+
+        let passwordMatch =  bcrypt.compareSync(req.body.password,user.password);
+        console.log("passwordMatch",passwordMatch);
+
+        if(passwordMatch){
+            let newpassword = req.body.newpassword;
+
+            let salt = bcrypt.genSaltSync(10);
+            let hashed_password = await bcrypt.hash(newpassword,salt);
+
+            console.log("hashed_password",hashed_password)
+
+
+            req.body.password=hashed_password
+            console.log("new password",req.body.password)
+
+
+
+            let updatePassword = await users.updateOne({_id},{$set:{password : req.body.password}});
+            console.log(updatePassword)
+
+            
+            let response = success_function({
+                success: true,
+                statuscode: 200,
+                data :updatePassword,
+                message: "successfully deleted.."
+            })
+            res.status(response.statuscode).send(response)
+            return;
+
+
+        }
+
+    } catch (error) {
+        console.log("error : ", error);
+        let response = error_function({
+            success: false,
+            statuscode: 400,
+            message: "error"
+        })
+        res.status(response.statuscode).send(response)
+        return;
+    }
+
+
+
+      
 }
 
 

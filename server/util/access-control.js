@@ -78,7 +78,7 @@ exports.accessControl = async function (access_types, req, res, next) {
                         let user_type = user.user_type.user_type;
                         console.log("user_type", user_type);
                 
-                        let allowed = access_types.split(",").map((obj) => control_data[obj]);
+                        let allowed = access_types.split(" ").map((obj) => control_data[obj]);
                         console.log("allowed", allowed);
                 
                         if (allowed && allowed.includes(user_type)) {

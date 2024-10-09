@@ -88,14 +88,15 @@ a:hover{
 }
 
 .login-amico{
-  padding: 28px 38px 0px 50px; ;
+  padding: 28px 70px 0px 350px; ;
   border-left: 1px solid #868686;
   /* box-shadow: 10px 10px 5px 12px lightblue; */
 }
 
 .welcome{
-  font-size: 20px;
-  padding: 0px 100px 0px 50px ;
+  font-size: 50px;
+  padding: 150px 130px 0px 100px ;
   color: white;
   font-weight: bolder;
+  letter-spacing: 10px;
 }

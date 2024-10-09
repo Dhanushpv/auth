@@ -21,6 +21,9 @@ const users = new mongoose.Schema({
     user_type:{
         type :mongoose.Schema.Types.ObjectId,
         ref : "usertypes"
+    },
+    image :{
+        type : String,
     }
 
 });

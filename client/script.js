@@ -6,6 +6,8 @@ async function login(event){
     let password = document.getElementById('password').value
 
 
+
+
     let data ={
         email,
         password
@@ -86,45 +88,66 @@ async function addEmployee(event){
     let name = document.getElementById('name').value;
     let email = document.getElementById('email').value;
     let phoneno = document.getElementById('phoneno').value;
-    let password = document.getElementById('password').value;
-    let usertype = document.getElementById('usertype').value;
+    let imageInput = document.getElementById('image')     
+    let user_type = document.getElementById('usertype').value;
 
-    let data = {
-        name,
-        email,
-        phoneno,
-        password,
-        usertype
-    }
 
-    let strdata = JSON.stringify(data);
+    if (imageInput.files && imageInput.files[0]) {
+        const file = imageInput.files[0];
+        const reader = new FileReader();
 
-    try {
-    
-        let response = await fetch('/user',{
-            method : 'POST',
-            headers : {
-                "Content-Type" : "Application/json",
-                'Authorization' : `Bearer ${token}`
-            },
-            body : strdata,
+        
+        reader.onloadend = async function () {
+            base64ImageString = reader.result; 
 
-        });
-        console.log("response",response);
+            let data = {
+                name,
+                email,
+                phoneno,
+                user_type,
+                image :base64ImageString,        
 
-        if(response.status === 200){
-            alert('Employee successfully added ');
-            window.location=`admin.html?login=${token_key}`
-        }else{
-            alert('somthing went worg')
+            }
+        
+            let strdata = JSON.stringify(data);
+            console.log("strdata : ",strdata)
+        
+            try {
+            
+                let response = await fetch('/user',{
+                    method : 'POST',
+                    headers : {
+                        "Content-Type" : "Application/json",
+                        'Authorization' : `Bearer ${token}`
+                    },
+                    body : strdata,
+        
+                });
+                console.log("response",response);
+        
+                if(response.status === 200){
+                    alert('Employee successfully added ');
+                    window.location=`admin.html?login=${token_key}`
+                }else{
+                    alert('somthing went worg')
+                }
+        
+                 
+                
+        
+            } catch (error) {
+                console.log("error",error)
+            }
+            
+            
         }
 
-         
-        
-
-    } catch (error) {
-        console.log("error",error)
+        reader.readAsDataURL(file);
+    }else{
+        alert("Please select an image.");
     }
+
+   
 }
 
 async function veiwUsers(){
@@ -157,7 +180,7 @@ async function veiwUsers(){
         
             row += `
                 <tr>
-                    <td class="hov"><i class='fas fa-user-alt' style='font-size:36px'></i></td>
+                  <td class="hov"><img src="${data[i].image}" style="width: 20px ; heigth :20px;" alt="Image description"></td>
                     <td class="hov">${data[i]._id}</td>
                     <td class="hov">${data[i].name}</td>
                     <td class="hov">${data[i].email}</td>
@@ -227,9 +250,9 @@ async function loadUserDatas() {
         // let name = data.name
 
         let single = `
-            <div> ${data.email}</div>
-            <div> ${data.name}</div>
-            <div>${data.phoneno}</div>
+            <div class="pt-5 line2"> ${data.email}</div>
+            <div  class=" line2"> ${data.name}</div>
+            <div class=" line2">${data.phoneno}</div>
         `;
 
         singleViewData.innerHTML = single;
