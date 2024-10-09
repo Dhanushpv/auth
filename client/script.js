@@ -189,9 +189,6 @@ function singleData(id){
 
     let token = localStorage.getItem(token_key)
     window.location =`employee.html?login=${token_key}&id=${id}`
-
-  
-
 }
 
 async function loadUserDatas() {
@@ -201,43 +198,45 @@ async function loadUserDatas() {
     let params = new URLSearchParams(window.location.search);
 
     let id = params.get('id');
-
-    let  token_key = params.get('login');
-
-    let token = localStorage.getItem(token_key)
-
-
-
+    let token_key = params.get('login');
+    let token = localStorage.getItem(token_key);
 
     try {
-       
-        let response = await fetch(`/users/${id}`,{
-            method : 'GET',
-            headers : {
-                'Authorization' : `Bearer ${token}`,
-                "Content-Type" : "Application/json",
+        let response = await fetch(`/users/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                "Content-Type": "Application/json",
             }
-   
-        })
+        });
 
-        console.log("response",response);
-        
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
         let parsed_Response = await response.json();
-        console.log("parsed_Response",parsed_Response);
-
+        console.log("parsed_Response", parsed_Response);
 
         let data = parsed_Response.data;
-        console.log("data",data)
+        console.log("data", data);
 
-      
-        
+        let singleViewData = document.getElementById('singleViewData');
 
+        // Use fallback values if data fields are undefined or null
+        // let email = data.email 
+        // let name = data.name
 
+        let single = `
+            <div> ${data.email}</div>
+            <div> ${data.name}</div>
+            <div>${data.phoneno}</div>
+        `;
 
-
+        singleViewData.innerHTML = single;
 
     } catch (error) {
-        console.log("error",error)
+        console.log("Error:", error);
+        document.getElementById('singleViewData').innerHTML = `<div>Error loading data</div>`;
     }
 }
 
@@ -253,9 +252,6 @@ async function viewData(){
     let  token_key = params.get('login');
 
     let token = localStorage.getItem(token_key)
-
-
-
 
     try {
        
@@ -275,10 +271,6 @@ async function viewData(){
 
         let data = parsed_Response.data;
         console.log("data",data)
-
-
-
-
 
     } catch (error) {
         console.log("error",error)
@@ -408,19 +400,11 @@ async function editData(event){
 }
 
 async function deleteData(id) {
-
     let params = new URLSearchParams(window.location.search)
-
     let token_key = params.get('login');
-
-
-
     let token = localStorage.getItem(token_key);
 
-
     console.log("reached......")
-
-   
 
     try {
         let response = await fetch(`/userDelete/${id}`,{
@@ -442,5 +426,4 @@ async function deleteData(id) {
         console.log("error",error);
     }
 
-    
 }

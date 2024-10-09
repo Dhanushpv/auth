@@ -2,6 +2,8 @@ let users = require('../db/models/user');
 const usertype = require('../db/models/user_type');
 const { success_function, error_function } = require('../util/userResponse')
 const bcrypt =require('bcryptjs')
+const sendemail = require('../util/send-email').sendEmail
+const resetpassword = require('../util/Email_template/setpassword').resetPassword
     
 exports.create1 = async function (req, res) {
 
@@ -9,27 +11,57 @@ exports.create1 = async function (req, res) {
         let body = req.body;
         console.log('body',body);
 
-        let password = body.password;
+        // let password = body.password;
+        let emails = body.email
+        let name = body.name
 
-        let user_type = await usertype.findOne({user_type : body.usertype});
+
+        let user_type = await usertype.findOne({user_type : body.user_type});
         console.log("user type" , user_type);
 
         let id = user_type._id
+        console.log("id",id)
 
 
         body.user_type=id
 
 
-        let salt = bcrypt.genSaltSync(10);
-        console.log('salt',salt);
 
-        let hashed_password = bcrypt.hashSync(password,salt);
-        console.log('hashed_password' ,hashed_password)
+        function generateRandomPassword(length) {
+            let charset =
+              "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$";
+            let password = "";
+  
+            for (var i = 0; i < length; i++) {
+              var randomIndex = Math.floor(Math.random() * charset.length);
+              password += charset.charAt(randomIndex);
+            }
+  
+            return password;
+          }
+  
+          var randomPassword = generateRandomPassword(12);
+          //console.log(randomPassword);
 
-        body.password=hashed_password
+          let content = await resetpassword(name,emails,randomPassword)
 
+          await sendemail(emails,"update password",content)
+  
+          let salt = bcrypt.genSaltSync(10);
+          let password = bcrypt.hashSync(randomPassword, salt);
+          console.log("password : ",password)
+  
+        
+        random_body={
+            name : body.name,
+            email : body.email,
+            phoneno : body.phoneno,
+            password :password,
+            user_type : body.user_type
 
-        let userData = await users.create(body);
+          }
+
+        let userData = await users.create(random_body);
         console.log('userData',userData);
 
         let response = success_function({
@@ -173,7 +205,7 @@ exports.delete = async function (req,res){
         deleteData = await users.deleteOne ({_id : DeleteId});
         console.log("deleteData",deleteData);
 
-let response = success_function({
+    let response = success_function({
         success: true,
         statuscode: 200,
         message: "successfully deleted.."

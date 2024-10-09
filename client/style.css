@@ -15,10 +15,10 @@ body{
   }
 
   .custom-btn {
-    width: 130px;
+    width: 330px;
     height: 40px;
     color: #fff;
-    border-radius: 5px;
+    border-radius: 45px;
     padding: 10px 25px;
     font-family: 'Lato', sans-serif;
     font-weight: 500;
@@ -50,7 +50,7 @@ body{
   }
   
   .bord{
-  padding: 30px;
+  padding: 0px 0px 0px 60px ;
   width: 400px;
   height: 700px;
   }
@@ -64,7 +64,7 @@ body{
   }
 .input_box{
   border-radius: 20px;
-  width: 300px;
+  width: 330px;
   background-color: #ffffff00;
   border: 1px solid whitesmoke;
   color: #fff;
@@ -73,4 +73,29 @@ body{
 ::placeholder {
   color: rgb(255, 255, 255);
   opacity: 1; /* Firefox */
+}
+.bttn2{
+  width: 100px;
+  background-color: rgb(71, 153, 235);
+  border: 1px solid rgb(71, 153, 235);
+  font-weight: bolder;
+  color: #c0eafa;
+  border-radius: 15px;
+}
+a:hover{
+  border-bottom: 1px solid #fff;
+  transform: 3s;
+}
+
+.login-amico{
+  padding: 28px 38px 0px 50px; ;
+  border-left: 1px solid #868686;
+  /* box-shadow: 10px 10px 5px 12px lightblue; */
+}
+
+.welcome{
+  font-size: 20px;
+  padding: 0px 100px 0px 50px ;
+  color: white;
+  font-weight: bolder;
 }
