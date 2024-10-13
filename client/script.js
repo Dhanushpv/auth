@@ -49,7 +49,7 @@ async function login(event){
 
 
     if(user_type ==='Admin'){
-
+        
         window.location =`admin.html?login=${token_key}`
     }
     else if(user_type === "employee"){
@@ -215,6 +215,17 @@ function singleData(id){
     window.location =`employee.html?login=${token_key}&id=${id}`
 }
 
+// function main_view(id){
+//     console.log("clicked")
+//     let params = new URLSearchParams(window.location.search);
+//     console.log('params',params);
+
+//     let token_key = params.get('login');
+//     console.log("token_key",token_key);
+
+//     window.location =`view.html?login=${token_key}&id=${id}`
+// }
+
 async function loadUserDatas() {
 
     console.log("reached ...................");
@@ -261,7 +272,7 @@ async function loadUserDatas() {
 
         
         let reSet = `
-            <button onclick="resetCall('${data._id}')">Reset</button>
+            <button class="" onclick="resetCall('${data._id}')">Reset</button>
 
 
         `
@@ -536,6 +547,11 @@ async function resetPassword(event) {
 
         let data = await response.json(); 
         console.log("Response data:", data);
+
+        if(response.status===200){
+            alert("your password reset successfull")
+            window.location.href="index.html"
+        }
 
     } catch (error) {
         console.error("Error:", error);
