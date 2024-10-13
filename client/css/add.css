@@ -3,8 +3,9 @@
     padding: 0px;
 }
 body{
-    background-color: rgb(57, 44, 122);
+    background-color: rgb(66, 59, 101);
 }
+
 
 
 
@@ -15,10 +16,10 @@ body{
   }
 
   .custom-btn {
-    width: 330px;
+    width: 130px;
     height: 40px;
     color: #fff;
-    border-radius: 45px;
+    border-radius: 5px;
     padding: 10px 25px;
     font-family: 'Lato', sans-serif;
     font-weight: 500;
@@ -50,60 +51,47 @@ body{
   }
   
   .bord{
-  padding: 0px 0px 0px 60px ;
-  width: 400px;
-  height: 700px;
+    border: 10px double rgb(20, 3, 57);
+    border-radius: 20px;
   }
   .usertypes{
-    width: 200px;
+    width: 400px;
+    background-color: rgba(0, 0, 0, 0);
+    color: antiquewhite;
+    border: 2px solid rgba(255, 255, 255, 0);
+    border-bottom: 3px solid white;
+    border-radius: 50px ;
     
    
+  } 
+  .types{
+    padding: 0px 0px 0px 40px ;
+  }
+  .types1{
+    padding: 0px 0px 0px 47px ;
+  }
+  .types2{
+    padding: 0px 0px 0px 20px ;
+  }
+  .types3{
+    padding: 0px 0px 0px 20px ;
+  }
+  .types4 {
+    padding: 0px 0px 0px 80px ;
   }
   .usertypes-main{
-    margin-left: 38px;
+    padding: 0px 0px 0px 58px ;
   }
-.input_box{
-  border-radius: 20px;
-  width: 330px;
-  background-color: #ffffff00;
-  border: 1px solid whitesmoke;
-  color: #fff;
-  font-weight: bold;
-}
-::placeholder {
-  color: rgb(255, 255, 255);
-  opacity: 1; /* Firefox */
-}
-.bttn2{
-  width: 100px;
-  background-color: rgb(71, 153, 235);
-  border: 1px solid rgb(71, 153, 235);
-  font-weight: bolder;
-  color: #c0eafa;
-  border-radius: 15px;
-}
-a:hover{
-  border-bottom: 1px solid #fff;
-  transform: 3s;
-}
 
-.login-amico{
-  padding: 28px 70px 0px 350px; ;
-  border-left: 1px solid #868686;
-  /* box-shadow: 10px 10px 5px 12px lightblue; */
+.label{
+    display: flex;
+    justify-content: left;
+    align-items: start;
 }
-
-.welcome{
-  font-size: 50px;
-  padding: 350px 130px 0px 0px ;
-  color: white;
-  font-weight: bolder;
-  letter-spacing: 10px;
-}
-.welcome2{
-  font-size: 50px;
-  padding: 400px 130px 0px 0px ;
-  color: white;
-  font-weight: bolder;
-  letter-spacing: 10px;
+.login{
+    margin: 0px 10px 10px 10px;
+    width: 700px;
+    height: 610px;
+    background-color: rgb(166, 151, 240);
+    backdrop-filter: blur(10px);
 }

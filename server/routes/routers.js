@@ -16,6 +16,6 @@ router.get('/user',setAccessControl("1"),userController.getall);
 router.get('/users/:id',setAccessControl("*"),userController.getsingle);
 router.put('/singleUpdate/:id',setAccessControl("*"),userController.update);
 router.delete('/userDelete/:id',setAccessControl("1"),userController.delete);
-router.post('/resetPassword/:id',setAccessControl('*'),userController.resetPassword)
+router.put('/resetPassword/:id',setAccessControl('2'),userController.resetPassword)
 
 module.exports = router;

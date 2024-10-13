@@ -236,7 +236,6 @@ exports.delete = async function (req,res){
 }
 }
 
-
 exports.resetPassword =async function(req,res){
     try {
         
@@ -271,7 +270,7 @@ exports.resetPassword =async function(req,res){
                 success: true,
                 statuscode: 200,
                 data :updatePassword,
-                message: "successfully deleted.."
+                message: "Password reset completed successfully..."
             })
             res.status(response.statuscode).send(response)
             return;
