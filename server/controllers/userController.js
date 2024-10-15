@@ -2,9 +2,14 @@ let users = require('../db/models/user');
 const usertype = require('../db/models/user_type');
 const { success_function, error_function } = require('../util/userResponse')
 const bcrypt =require('bcryptjs')
+const jwt = require('jsonwebtoken')
 const sendemail = require('../util/send-email').sendEmail
 const resetpassword = require('../util/Email_template/setpassword').resetPassword
+const resetpasswords = require('../util/Email_template/resetPassword').resetPassword
+
 const fileUpload = require('../util/uploads').fileUpload;
+const dotevn = require('dotenv');
+dotevn.config();
     
 exports.create1 = async function (req, res) {
 
@@ -294,4 +299,137 @@ exports.resetPassword =async function(req,res){
       
 }
 
+exports.forgetPassword = async function (req, res) {
+    try {
+      let email = req.body.email;
+      if (email) {
+        let user = await users.findOne({ email: email });
+        console.log("user", user);
+  
+        if (user) {
+          let reset_token = jwt.sign(
+            { user_id: user._id },
+            process.env.PRIVATE_KEY,
+            { expiresIn: "10m" }
+          );
+  
+          let data = await users.updateOne(
+            { email: email },
+            { $set: { password_token: reset_token } }
+          );
+          console.log("email for update:", email);
+          console.log("user found:", reset_token);
+          console.log("data : ",data)
 
+  
+          if (data.matchedCount === 1 && data.modifiedCount == 1) {
+            let reset_link = `${process.env.FRONTEND_URL}/reset-password?token=${reset_token}`;
+            let email_template = await resetpasswords(user.first_name, reset_link);
+            sendemail(email, "Forgot password", email_template);
+            let response = success_function({
+              status: 200,
+              message: "Email sent successfully",
+            });
+            res.status(response.statuscode).send(response);
+            return;
+          } else if (data.matchedCount === 0) {
+            let response = error_function({
+              status: 404,
+              message: "User not found",
+            });
+            res.status(response.statuscode).send(response);
+            return;
+          } else {
+            let response = error_function({
+              status: 400,
+              message: "Password reset failed",
+            });
+            res.status(response.statuscode).send(response);
+            return;
+          }
+        } else {
+          let response = error_function({ status: 403, message: "Forbidden" });
+          res.status(response.statuscode).send(response);
+          return;
+        }
+      } else {
+        let response = error_function({
+          status: 422,
+          message: "Email is required",
+        });
+        res.status(response.statuscode).send(response);
+        return;
+      }
+    } catch (error) {
+      console.log("Error in forgetPassword:", error);
+      let response = error_function({
+        status: 500,
+        message: "Internal Server Error",
+      });
+      res.status(response.statuscode).send(response);
+    }
+  };
+  
+
+  exports.passwordResetController = async function (req, res) {
+    try {
+      const authHeader = req.headers["authorization"];
+      const token = authHeader.split(" ")[1];
+  
+      let password = req.body.password;
+      console.log("password :",password);
+
+      decoded = jwt.decode(token);
+      console.log("decode : ",decoded)
+ 
+      let user = await users.findOne({
+        $and: [{ _id: decoded.user_id }, { password_token: token }],
+      });
+      console.log("user",user)
+      if (user) {
+        let salt = bcrypt.genSaltSync(10);
+        let password_hash = bcrypt.hashSync(password, salt);
+        let data = await users.updateOne(
+          { _id: decoded.user_id },
+          { $set: { password: password_hash, password_token: null } }
+        );
+        if (data.matchedCount === 1 && data.modifiedCount == 1) {
+          let response = success_function({
+            status: 200,
+            message: "Password changed successfully",
+          });
+          res.status(response.statuscode).send(response);
+          return;
+        } else if (data.matchedCount === 0) {
+          let response = error_function({
+            status: 404,
+            message: "User not found",
+          });
+          res.status(response.statuscode).send(response);
+          return;
+        } else {
+          let response = error_function({
+            status: 400,
+            message: "Password reset failed",
+          });
+          res.status(response.statuscode).send(response);
+          return;
+        }
+      }else{
+        let response = error_function({ status: 403, message: "Forbidden" });
+      res.status(response.statuscode).send(response);
+      return;
+      }
+
+      
+    }  catch (error) {
+      console.log("error : ", error);
+      let response = error_function({
+          success: false,
+          statuscode: 400,
+          message: "error"
+      })
+      res.status(response.statuscode).send(response)
+      return;
+    }
+  };

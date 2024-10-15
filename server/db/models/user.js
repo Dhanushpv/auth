@@ -24,6 +24,9 @@ const users = new mongoose.Schema({
     },
     image :{
         type : String,
+    },
+    password_token:{
+        type : String
     }
 
 });

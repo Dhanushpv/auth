@@ -14,6 +14,7 @@ app.use(express.urlencoded({extended : true}))
 app.use(router);
 mongoConnect();
 app.use(authrouter);
+app.use('uploads',express.static('./uploads/users'))
 
 
 

@@ -53,7 +53,7 @@ async function login(event){
         window.location =`admin.html?login=${token_key}`
     }
     else if(user_type === "employee"){
-        window.location = `view.html?login=${token_key}&id=${id}`
+        window.location = `main_view.html?login=${token_key}&id=${id}`
     }
 
 
@@ -215,18 +215,19 @@ function singleData(id){
     window.location =`employee.html?login=${token_key}&id=${id}`
 }
 
-// function main_view(id){
-//     console.log("clicked")
-//     let params = new URLSearchParams(window.location.search);
-//     console.log('params',params);
+function main_view(){
+    console.log("clicked")
+    let params = new URLSearchParams(window.location.search);
+    console.log('params',params);
+    let id = params.get('id');
 
-//     let token_key = params.get('login');
-//     console.log("token_key",token_key);
+    let token_key = params.get('login');
+    console.log("token_key",token_key);
 
-//     window.location =`view.html?login=${token_key}&id=${id}`
-// }
+    window.location =`view.html?login=${token_key}&id=${id}`
+}
 
-async function loadUserDatas() {
+async function singleloadUserDatas() {
 
     console.log("reached ...................");
 
@@ -272,11 +273,66 @@ async function loadUserDatas() {
 
         
         let reSet = `
-            <button class="" onclick="resetCall('${data._id}')">Reset</button>
-
-
+            <button class="custom-btn btn-2" onclick="resetCall('${data._id}')">Reset</button>
         `
         resetALL.innerHTML=reSet;
+
+    } catch (error) {
+        console.log("Error:", error);
+        document.getElementById('singleViewData').innerHTML = `<div>Error loading data</div>`;
+    }
+}
+
+
+async function loadUserDatas() {
+
+    console.log("reached ...................");
+
+    let params = new URLSearchParams(window.location.search);
+
+    let id = params.get('id');
+    let token_key = params.get('login');
+    let token = localStorage.getItem(token_key);
+
+    try {
+        let response = await fetch(`/users/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                "Content-Type": "Application/json",
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        let parsed_Response = await response.json();
+        console.log("parsed_Response", parsed_Response);
+
+        let data = parsed_Response.data;
+        console.log("data", data);
+
+        let singleViewData = document.getElementById('singleViewData');
+        // let resetALL = document.getElementById('resetbttn')
+
+        // Use fallback values if data fields are undefined or null
+        // let email = data.email 
+        // let name = data.name
+
+        let single = `
+            <div class="pt-5 line2"> ${data.email}</div>
+            <div  class=" line2"> ${data.name}</div>
+            <div class=" line2">${data.phoneno}</div>
+        `;
+
+        singleViewData.innerHTML = single;
+
+        
+        // let reSet = `
+        //     <button class="custom-btn btn-2" onclick="resetCall('${data._id}')">Reset</button>
+        // `
+        // resetALL.innerHTML=reSet;
 
     } catch (error) {
         console.log("Error:", error);
@@ -500,6 +556,20 @@ async function logout() {
     }
 }
 
+async function singleViewsignout() {
+    console.log("Reached....at log out");
+    let params = new URLSearchParams(window.location.search);
+    let token_key = params.get('login');
+    let token = localStorage.getItem(token_key);
+    console.log("token",token)
+    if (token) {
+        localStorage.removeItem(token_key);
+        window.location.href = "index.html";  
+    } else {
+        console.log("No token found");
+    }
+}
+
 function resetCall(id) {
     console.log("Reached at resetCall");
     let params = new URLSearchParams(window.location.search);
@@ -558,56 +628,70 @@ async function resetPassword(event) {
     }
 }
 
+function forgotpassword(){
+       console.log("Reached at resetCall");
+    let params = new URLSearchParams(window.location.search);
+
+    let token_key = params.get('login');
+
+    window.location = `forgetPassword.html`;
+
+}
+async function resetPasswordHandler(){
+    
+}
+
+
 
 
 // function([string1, string2],target id,[color1,color2])    
-// consoleText(['UMS ...',], 'text',[]);
+consoleText(['UMS ...',], 'text',[]);
 
-// function consoleText(words, id, colors) {
-//   if (colors === undefined) colors = ['#fff'];
-//   var visible = true;
-//   var con = document.getElementById('console');
-//   var letterCount = 1;
-//   var x = 1;
-//   var waiting = false;
-//   var target = document.getElementById(id)
-//   target.setAttribute('style', 'color:' + colors[0])
-//   window.setInterval(function() {
+function consoleText(words, id, colors) {
+  if (colors === undefined) colors = ['#fff'];
+  var visible = true;
+  var con = document.getElementById('console');
+  var letterCount = 1;
+  var x = 1;
+  var waiting = false;
+  var target = document.getElementById(id)
+  target.setAttribute('style', 'color:' + colors[0])
+  window.setInterval(function() {
 
-//     if (letterCount === 0 && waiting === false) {
-//       waiting = true;
-//       target.innerHTML = words[0].substring(0, letterCount)
-//       window.setTimeout(function() {
-//         var usedColor = colors.shift();
-//         colors.push(usedColor);
-//         var usedWord = words.shift();
-//         words.push(usedWord);
-//         x = 1;
-//         target.setAttribute('style', 'color:' + colors[0])
-//         letterCount += x;
-//         waiting = false;
-//       }, 1000)
-//     } else if (letterCount === words[0].length + 1 && waiting === false) {
-//       waiting = true;
-//       window.setTimeout(function() {
-//         x = -1;
-//         letterCount += x;
-//         waiting = false;
-//       }, 1000)
-//     } else if (waiting === false) {
-//       target.innerHTML = words[0].substring(0, letterCount)
-//       letterCount += x;
-//     }
-//   }, 120)
-//   window.setInterval(function() {
-//     if (visible === true) {
-//       con.className = 'console-underscore hidden'
-//       visible = false;
+    if (letterCount === 0 && waiting === false) {
+      waiting = true;
+      target.innerHTML = words[0].substring(0, letterCount)
+      window.setTimeout(function() {
+        var usedColor = colors.shift();
+        colors.push(usedColor);
+        var usedWord = words.shift();
+        words.push(usedWord);
+        x = 1;
+        target.setAttribute('style', 'color:' + colors[0])
+        letterCount += x;
+        waiting = false;
+      }, 1000)
+    } else if (letterCount === words[0].length + 1 && waiting === false) {
+      waiting = true;
+      window.setTimeout(function() {
+        x = -1;
+        letterCount += x;
+        waiting = false;
+      }, 1000)
+    } else if (waiting === false) {
+      target.innerHTML = words[0].substring(0, letterCount)
+      letterCount += x;
+    }
+  }, 120)
+  window.setInterval(function() {
+    if (visible === true) {
+      con.className = 'console-underscore hidden'
+      visible = false;
 
-//     } else {
-//       con.className = 'console-underscore'
+    } else {
+      con.className = 'console-underscore'
 
-//       visible = true;
-//     }
-//   }, 400)
-// }
+      visible = true;
+    }
+  }, 400)
+}
