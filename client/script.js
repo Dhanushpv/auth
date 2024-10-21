@@ -637,9 +637,9 @@ function forgotpassword(){
     window.location = `forgetPassword.html`;
 
 }
-async function resetPasswordHandler(){
+// async function resetPasswordHandler(){
     
-}
+// }
 
 
 

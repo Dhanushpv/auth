@@ -1,10 +1,15 @@
 body{
     width: 100%;
     height: 100vh;
-    background-image: url(https://img.freepik.com/free-photo/2d-graphic-colorful-wallpaper-with-grainy-gradients_23-2151001563.jpg?t=st=1728878886~exp=1728882486~hmac=6e8d1656c78eeb9c52359dbbbc24fa5be3bbc1e12e3f054df71a8a36b7d87481&w=1380);
+    background-image: url(https://img.freepik.com/free-photo/view-natural-mountain-formation-with-dreamy-aesthetic_23-2151700231.jpg?t=st=1729054394~exp=1729057994~hmac=66e1e1e68630720f5684fd82c6dda832d12055438a238ae25daefd106ce2f5d8&w=1380);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+.maintext_container{
+    font-size: 70px;
+    color: white;
+    font-weight: bold;
 }
 .bttn2{
     width: 100px;

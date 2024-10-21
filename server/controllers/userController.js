@@ -3,7 +3,7 @@ const usertype = require('../db/models/user_type');
 const { success_function, error_function } = require('../util/userResponse')
 const bcrypt =require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const sendemail = require('../util/send-email').sendEmail
+  const sendemail = require('../util/send-email').sendEmail
 const resetpassword = require('../util/Email_template/setpassword').resetPassword
 const resetpasswords = require('../util/Email_template/resetPassword').resetPassword
 
