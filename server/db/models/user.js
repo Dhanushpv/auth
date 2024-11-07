@@ -20,7 +20,8 @@ const users = new mongoose.Schema({
     },
     user_type:{
         type :mongoose.Schema.Types.ObjectId,
-        ref : "usertypes"
+        ref : "usertypes",
+        required :true
     },
     image :{
         type : String,

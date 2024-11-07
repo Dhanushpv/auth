@@ -103,30 +103,35 @@ exports.create1 = async function (req, res) {
     }
 }
 
-exports.getall= async function(req,res){
-    try {
-       getuserData= await users.find();
-       console.log("getuserData",getuserData);
-       let response = success_function({
-        success: true,
-        statuscode: 200,
-        message: "successfully get all data ..",
-        data :getuserData
-    })
-    res.status(response.statuscode).send(response)
-    return;
+exports.getall = async function(req, res) {
+  try {
+      // Fetch users where role is not 'admin'
+      const getuserData = await users.find({ user_type: { $ne: '66ff8d3814f6bc1a2e416949' } });
+console.log("getuserData", getuserData);
 
-} catch (error) {
 
-    console.log("error : ", error);
-    let response = error_function({
-        success: false,
-        statuscode: 400,
-        message: "error"
-    })
-    res.status(response.statuscode).send(response)
-    return;
-}
+      let response = success_function({
+          success: true,
+          statuscode: 200,
+          message: "Successfully retrieved employee data.",
+          data: getuserData
+      });
+      
+      res.status(response.statuscode).send(response);
+      return;
+
+  } catch (error) {
+      console.log("error:", error);
+      
+      let response = error_function({
+          success: false,
+          statuscode: 400,
+          message: "Error fetching data."
+      });
+      
+      res.status(response.statuscode).send(response);
+      return;
+  }
 }
 
 exports.getsingle = async function (req,res){
@@ -323,7 +328,7 @@ exports.forgetPassword = async function (req, res) {
 
   
           if (data.matchedCount === 1 && data.modifiedCount == 1) {
-            let reset_link = `${process.env.FRONTEND_URL}/reset-password?token=${reset_token}`;
+            let reset_link = `${process.env.FRONTEND_URL}?token=${reset_token}`;
             let email_template = await resetpasswords(user.first_name, reset_link);
             sendemail(email, "Forgot password", email_template);
             let response = success_function({

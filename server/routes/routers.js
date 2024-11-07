@@ -18,6 +18,6 @@ router.put('/singleUpdate/:id',setAccessControl("*"),userController.update);
 router.delete('/userDelete/:id',setAccessControl("1"),userController.delete);
 router.put('/resetPassword/:id',setAccessControl('2'),userController.resetPassword);
 router.post('/forgot_password',setAccessControl('*'),userController.forgetPassword);
-router.patch('/reset-password', setAccessControl('*') ,userController.passwordResetController);
+router.patch('/resetPassword', setAccessControl('*') ,userController.passwordResetController);
 
 module.exports = router;

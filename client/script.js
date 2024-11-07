@@ -1,68 +1,88 @@
 
-async function login(event){
+
+async function login(event) {
     event.preventDefault();
 
-    let email = document.getElementById('email').value
+    let email = document.getElementById('email').value;
+    let password = document.getElementById('password').value;
 
-    let password = document.getElementById('password').value
-
-
-
-
-    let data ={
-        email,
-        password
+    // Input validation
+    if (!email || !password) {
+        return alert('Please fill out both fields.');
     }
 
-   let strdata = JSON.stringify(data);
-   console.log("strdata",strdata);
-   
-   try {
-    let response = await fetch('/login',{
-        method : 'POST',
-        headers : {
-            'Content-Type' : 'application/json'
-        },
-        body : strdata
-    });
-    console.log('response',response);
+    let data = { email, password };
+    let strdata = JSON.stringify(data);
+    console.log("strdata", strdata);
 
-    let parsed_Response = await response.json();
-    console.log('parsed_Response : ',parsed_Response);
+    try {
+        let response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: strdata
+        });
+        console.log('response', response);
 
-    let token_data = parsed_Response.data
-    console.log("token_data : ",token_data);
+        // Check if response is OK
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
-    let user_type = token_data.user_type.user_type;
+        let parsed_Response = await response.json();
+        console.log('parsed_Response : ', parsed_Response);
 
-    let token = token_data.token;
+        // Ensure data exists in response
+        if (!parsed_Response.data) {
+            throw new Error('Invalid response structure');
+        }
 
-    let id =token_data.id;
-    console.log("id",id)
+        let token_data = parsed_Response.data;
+        console.log("token_data : ", token_data);
 
-    let token_key = id;
-    
-    
-    localStorage.setItem(token_key, token);
-    console.log("token_key",token_key)
+        let user_type = token_data.user_type.user_type;  // Ensure user_type exists properly
+        let token = token_data.token;
+        let id = token_data.id;
+        console.log("id", id);
 
+        // Set token in localStorage
+        let token_key = id;
+        localStorage.setItem(token_key, token);
+        console.log("token_key", token_key);
 
+        // Retrieve or initialize login count from localStorage for employee
+        let loginCountKey = `${id}_login_count`;
+        let loginCount = localStorage.getItem(loginCountKey);
 
-    if(user_type ==='Admin'){
-        
-        window.location =`admin.html?login=${token_key}`
+        if (!loginCount) {
+            // If first time login, set count to 1 and redirect to reset password page
+            localStorage.setItem(loginCountKey, 1);
+            alert("This is your first login. Please reset your password.");
+            
+            window.location = `resetpassword.html?login=${token_key}&id=${id}`;
+            return; // Stop further execution after redirection
+        } else {
+            // Increment login count
+            loginCount = parseInt(loginCount) + 1;
+            localStorage.setItem(loginCountKey, loginCount);
+        }
+
+        console.log(`User has logged in ${loginCount} times`);
+
+        // Redirect based on user type
+        if (user_type === 'Admin') {
+            window.location = `admin.html?login=${token_key}`;
+        } else if (user_type === "employee") {
+            window.location = `main_view.html?login=${token_key}&id=${id}`;
+        }
+
+    } catch (error) {
+        console.error("Login failed:", error);
+        alert('Failed to login. Please try again.');
     }
-    else if(user_type === "employee"){
-        window.location = `main_view.html?login=${token_key}&id=${id}`
-    }
-
-
-
-   } catch (error) {
-    console.log("error",error);
-   }
- 
 }
+
 
 function add(){
 
@@ -89,12 +109,11 @@ async function addEmployee(event){
     let name = document.getElementById('name').value;
     let email = document.getElementById('email').value;
     let phoneno = document.getElementById('phoneno').value;
-    let imageInput = document.getElementById('image')     
     let user_type = document.getElementById('usertype').value;
+    let image = document.getElementById('image')     
 
-
-    if (imageInput.files && imageInput.files[0]) {
-        const file = imageInput.files[0];
+    if (image.files && image.files[0]) {
+        const file = image.files[0];
         const reader = new FileReader();
 
         
@@ -106,7 +125,7 @@ async function addEmployee(event){
                 email,
                 phoneno,
                 user_type,
-                image :base64ImageString,        
+                image : base64ImageString,        
 
             }
         
@@ -630,68 +649,143 @@ async function resetPassword(event) {
 
 function forgotpassword(){
        console.log("Reached at resetCall");
-    let params = new URLSearchParams(window.location.search);
 
-    let token_key = params.get('login');
 
     window.location = `forgetPassword.html`;
 
 }
-// async function resetPasswordHandler(){
+async function resetPasswordHandler(event){
+    event.preventDefault();
+    console.log("reached..... at forget")
+
+    let email = document.getElementById('email').value
+    let data={
+        email
+    }
+
+    let strdata =JSON.stringify(data);
+    console.log('strdata', strdata)
+
+    try {
+        let responce = await fetch('/forgot_password', {
+            method: 'POST',
+            headers: {
+
+                'Content-Type': 'application/json'
+            },
+            body :strdata
+            })
+            console.log(responce);
+
+            if(responce.status === 200){
+                alert("reset link is send to your email")
+            }else{
+                alert("something went worng")
+            }
     
-// }
+
+    } catch (error) {
+        console.log('error',error)
+    }
+}
+
+async function changePassword(event){ 
+    event.preventDefault();
+
+    console.log("reached.....at chagepasword");
+
+    
+    let params = new URLSearchParams(window.location.search);
+    console.log("params" ,params);
+
+    let token = params.get('token');
+    console.log("token_key",token);
+
+    let password = document.getElementById('newpassword').value;
+
+    let data ={
+        password
+    }
+
+    let strdata = JSON.stringify(data);
+    console.log(strdata)
+    try {
+        
+        let responce = await fetch('/resetPassword',{
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body :strdata
+        });
+
+        console.log(responce)
+
+    } catch (error) {
+        console.log("error",error)
+    }
+
+
+
+    
+}
+
+    
+    
+
 
 
 
 
 // function([string1, string2],target id,[color1,color2])    
-consoleText(['UMS ...',], 'text',[]);
+// consoleText(['UMS ...',], 'text',[]);
 
-function consoleText(words, id, colors) {
-  if (colors === undefined) colors = ['#fff'];
-  var visible = true;
-  var con = document.getElementById('console');
-  var letterCount = 1;
-  var x = 1;
-  var waiting = false;
-  var target = document.getElementById(id)
-  target.setAttribute('style', 'color:' + colors[0])
-  window.setInterval(function() {
+// function consoleText(words, id, colors) {
+//   if (colors === undefined) colors = ['#fff'];
+//   var visible = true;
+//   var con = document.getElementById('console');
+//   var letterCount = 1;
+//   var x = 1;
+//   var waiting = false;
+//   var target = document.getElementById(id)
+//   target.setAttribute('style', 'color:' + colors[0])
+//   window.setInterval(function() {
 
-    if (letterCount === 0 && waiting === false) {
-      waiting = true;
-      target.innerHTML = words[0].substring(0, letterCount)
-      window.setTimeout(function() {
-        var usedColor = colors.shift();
-        colors.push(usedColor);
-        var usedWord = words.shift();
-        words.push(usedWord);
-        x = 1;
-        target.setAttribute('style', 'color:' + colors[0])
-        letterCount += x;
-        waiting = false;
-      }, 1000)
-    } else if (letterCount === words[0].length + 1 && waiting === false) {
-      waiting = true;
-      window.setTimeout(function() {
-        x = -1;
-        letterCount += x;
-        waiting = false;
-      }, 1000)
-    } else if (waiting === false) {
-      target.innerHTML = words[0].substring(0, letterCount)
-      letterCount += x;
-    }
-  }, 120)
-  window.setInterval(function() {
-    if (visible === true) {
-      con.className = 'console-underscore hidden'
-      visible = false;
+//     if (letterCount === 0 && waiting === false) {
+//       waiting = true;
+//       target.innerHTML = words[0].substring(0, letterCount)
+//       window.setTimeout(function() {
+//         var usedColor = colors.shift();
+//         colors.push(usedColor);
+//         var usedWord = words.shift();
+//         words.push(usedWord);
+//         x = 1;
+//         target.setAttribute('style', 'color:' + colors[0])
+//         letterCount += x;
+//         waiting = false;
+//       }, 1000)
+//     } else if (letterCount === words[0].length + 1 && waiting === false) {
+//       waiting = true;
+//       window.setTimeout(function() {
+//         x = -1;
+//         letterCount += x;
+//         waiting = false;
+//       }, 1000)
+//     } else if (waiting === false) {
+//       target.innerHTML = words[0].substring(0, letterCount)
+//       letterCount += x;
+//     }
+//   }, 120)
+//   window.setInterval(function() {
+//     if (visible === true) {
+//       con.className = 'console-underscore hidden'
+//       visible = false;
 
-    } else {
-      con.className = 'console-underscore'
+//     } else {
+//       con.className = 'console-underscore'
 
-      visible = true;
-    }
-  }, 400)
-}
+//       visible = true;
+//     }
+//   }, 400)
+// }
